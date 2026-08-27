@@ -1,0 +1,1081 @@
+/* ============================================ */
+/* QUICKCART+ - GOLDEN YELLOW + RED THEME       */
+/* Matches: Pink Zoo brand colors               */
+/* ============================================ */
+
+/* -------------------------------------------- */
+/* 1. CSS VARIABLES                             */
+/* -------------------------------------------- */
+:root {
+    /* Brand Colors - RED + GOLDEN YELLOW */
+    --primary: #C41E3A;          /* Deep Red - main brand color */
+    --primary-dark: #991B1B;     /* Darker Red - hover states */
+    --primary-light: #FEE2E2;    /* Light Red/Pink - subtle backgrounds */
+
+    /* Accent - Golden Yellow */
+    --secondary: #F5C518;        /* Golden Yellow - badges, highlights */
+    --secondary-dark: #D97706;   /* Dark Gold - gradients */
+
+    /* Neutral Colors */
+    --danger: #991B1B;           /* Dark Red for remove/delete */
+    --dark: #111827;             /* Almost black - headings */
+    --gray: #6B7280;             /* Medium gray - subtitles */
+    --light-gray: #E5E7EB;       /* Borders, dividers */
+    --light: #FFFBEB;            /* Warm Cream - app backgrounds */
+    --white: #ffffff;
+
+    /* Golden Yellow Body Background */
+    --body-bg: #F5C518;          /* Matches the image background */
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+
+    /* Spacing */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+}
+
+/* -------------------------------------------- */
+/* 2. RESET & BASE STYLES                       */
+/* -------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    background: var(--body-bg);  /* GOLDEN YELLOW background */
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* -------------------------------------------- */
+/* 3. APP CONTAINER                             */
+/* -------------------------------------------- */
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--light);    /* Warm cream inside the app */
+    min-height: 100vh;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+    padding-bottom: 70px;
+}
+
+/* -------------------------------------------- */
+/* 4. PAGE SYSTEM                               */
+/* -------------------------------------------- */
+.page {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* -------------------------------------------- */
+/* 5. HEADER (RED background)                   */
+/* -------------------------------------------- */
+.app-header {
+    background: var(--primary);  /* RED header */
+    color: var(--white);
+    padding: 12px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.3rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    opacity: 0.9;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.cart-btn {
+    position: relative;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--secondary);      /* GOLDEN YELLOW badge */
+    color: var(--primary-dark);         /* Dark red text */
+    font-size: 0.65rem;
+    font-weight: 800;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* -------------------------------------------- */
+/* 6. SEARCH BAR                                */
+/* -------------------------------------------- */
+.search-bar {
+    padding: 10px 16px;
+    background: var(--white);
+    border-bottom: 1px solid var(--light-gray);
+    position: sticky;
+    top: 56px;
+    z-index: 99;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 12px 10px 40px;
+    border: 1px solid var(--light-gray);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    background: var(--light);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+}
+
+.search-icon {
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* -------------------------------------------- */
+/* 7. TAB SWITCHER                              */
+/* -------------------------------------------- */
+.tab-switcher {
+    display: flex;
+    padding: 8px 16px;
+    gap: 8px;
+    background: var(--white);
+    border-bottom: 1px solid var(--light-gray);
+    position: sticky;
+    top: 106px;
+    z-index: 98;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--light);
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.tab-btn.active {
+    background: var(--primary);     /* RED active tab */
+    color: var(--white);
+}
+
+/* -------------------------------------------- */
+/* 8. CATEGORY PILLS                            */
+/* -------------------------------------------- */
+.categories-scroll {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: var(--white);
+}
+
+.category-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 64px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.category-pill:active {
+    transform: scale(0.95);
+}
+
+.category-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    background: var(--light);        /* Cream background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    transition: all 0.3s;
+}
+
+.category-pill:hover .category-icon {
+    background: var(--primary);      /* Red on hover */
+    color: var(--white);
+}
+
+.category-pill span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--gray);
+}
+
+/* -------------------------------------------- */
+/* 9. PROMO BANNER                              */
+/* -------------------------------------------- */
+.promo-banner {
+    margin: 0 16px 16px;
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark)); /* RED gradient */
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+.rental-banner {
+    background: linear-gradient(135deg, var(--primary), var(--secondary-dark)); /* Red to Gold */
+}
+
+.promo-badge {
+    display: inline-block;
+    background: var(--secondary);     /* GOLDEN YELLOW badge */
+    color: var(--primary-dark);        /* Dark red text */
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.promo-banner h3 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+}
+
+.promo-banner p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+/* -------------------------------------------- */
+/* 10. SECTION HEADERS                          */
+/* -------------------------------------------- */
+.product-section {
+    padding-bottom: 16px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 16px 8px;
+}
+
+.section-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.see-all {
+    color: var(--primary);            /* RED "See All" */
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* -------------------------------------------- */
+/* 11. PRODUCT GRID                             */
+/* -------------------------------------------- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 16px;
+}
+
+.product-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--light-gray);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:active {
+    transform: scale(0.98);
+}
+
+.product-image {
+    height: 120px;
+    background: var(--light);         /* Cream background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    position: relative;
+}
+
+.product-tag {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--secondary);     /* GOLD tag */
+    color: var(--primary-dark);        /* Dark red text */
+    font-size: 0.6rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: 800;
+}
+
+.product-details {
+    padding: 12px;
+}
+
+.product-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-weight {
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-bottom: 8px;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-price {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.product-mrp {
+    font-size: 0.75rem;
+    color: var(--gray);
+    text-decoration: line-through;
+    margin-left: 4px;
+    font-weight: 400;
+}
+
+/* -------------------------------------------- */
+/* 12. BUTTONS                                  */
+/* -------------------------------------------- */
+.add-btn {
+    background: var(--primary-light); /* Light red bg */
+    color: var(--primary-dark);        /* Dark red text */
+    border: 1px solid var(--primary);  /* Red border */
+    padding: 6px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.add-btn:hover {
+    background: var(--primary);        /* Red fill */
+    color: var(--white);
+}
+
+.btn-primary {
+    background: var(--primary);        /* RED button */
+    color: var(--white);
+    border: none;
+    padding: 14px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:disabled {
+    background: var(--gray);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary);             /* Red text */
+    border: 2px solid var(--primary);  /* Red border */
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.btn-full {
+    width: 100%;
+    margin-top: 16px;
+}
+
+/* -------------------------------------------- */
+/* 13. QUANTITY CONTROL                         */
+/* -------------------------------------------- */
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary);        /* RED qty bar */
+    border-radius: var(--radius-sm);
+    padding: 4px;
+}
+
+.qty-control button {
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-size: 1rem;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-control span {
+    color: var(--white);
+    font-weight: 700;
+    font-size: 0.85rem;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* -------------------------------------------- */
+/* 14. RENTAL LIST                              */
+/* -------------------------------------------- */
+.rental-list {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rental-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--light-gray);
+    display: flex;
+    box-shadow: var(--shadow-sm);
+}
+
+.rental-image {
+    width: 100px;
+    min-height: 100px;
+    background: var(--light);          /* Cream bg */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.rental-details {
+    padding: 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.rental-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.rental-price {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: 8px;
+}
+
+.rental-price span {
+    color: var(--primary);             /* RED price */
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.duration-select {
+    padding: 6px 10px;
+    border: 1px solid var(--light-gray);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    background: var(--white);
+    outline: none;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+/* -------------------------------------------- */
+/* 15. PAGE HEADER                              */
+/* -------------------------------------------- */
+.page-header {
+    background: var(--white);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--light-gray);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--dark);
+    padding: 4px;
+}
+
+.page-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* -------------------------------------------- */
+/* 16. CART PAGE                                */
+/* -------------------------------------------- */
+.cart-items {
+    padding: 8px 0;
+}
+
+.cart-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--white);
+    border-bottom: 1px solid var(--light-gray);
+    align-items: center;
+}
+
+.cart-item-image {
+    width: 60px;
+    height: 60px;
+    background: var(--light);          /* Cream bg */
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-info h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.cart-item-info p {
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-bottom: 6px;
+}
+
+.cart-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-item-price {
+    font-weight: 700;
+    color: var(--primary);             /* RED price */
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: var(--danger);              /* Dark red */
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* Cart Summary */
+.cart-summary {
+    background: var(--white);
+    padding: 16px;
+    margin: 8px 16px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 0.9rem;
+}
+
+.total-row {
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-top: 1px dashed var(--light-gray);
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.free-text {
+    color: var(--primary);             /* RED "FREE" text */
+    font-weight: 600;
+}
+
+.savings-text {
+    color: var(--primary);             /* RED savings text */
+    font-size: 0.8rem;
+    margin-top: 8px;
+}
+
+/* Checkout Button (Fixed) */
+.checkout-btn {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
+    max-width: 448px;
+    background: var(--primary);        /* RED checkout */
+    color: var(--white);
+    border: none;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    z-index: 90;
+    transition: all 0.3s;
+}
+
+.checkout-btn:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateX(-50%) translateY(-2px);
+}
+
+/* -------------------------------------------- */
+/* 17. EMPTY STATE                              */
+/* -------------------------------------------- */
+.empty-state {
+    text-align: center;
+    padding: 60px 32px;
+    color: var(--gray);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    opacity: 0.3;
+    color: var(--gray);
+}
+
+.empty-state h3 {
+    color: var(--dark);
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.empty-state p {
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+}
+
+/* -------------------------------------------- */
+/* 18. CHECKOUT FORM                            */
+/* -------------------------------------------- */
+.checkout-form {
+    padding: 16px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--dark);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--light-gray);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);      /* Red border on focus */
+}
+
+/* Payment Options */
+.payment-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.payment-option {
+    flex: 1;
+    min-width: 90px;
+    padding: 16px 8px;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--radius-md);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--white);
+}
+
+.payment-option i {
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 6px;
+    color: var(--gray);
+}
+
+.payment-option span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray);
+}
+
+.payment-option.active {
+    border-color: var(--primary);       /* Red border */
+    background: var(--primary-light);   /* Light red bg */
+}
+
+.payment-option.active i,
+.payment-option.active span {
+    color: var(--primary-dark);         /* Dark red text */
+}
+
+.checkout-summary {
+    background: var(--white);
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    margin-top: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* -------------------------------------------- */
+/* 19. SUCCESS PAGE                             */
+/* -------------------------------------------- */
+.success-container {
+    text-align: center;
+    padding: 60px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.success-icon {
+    width: 100px;
+    height: 100px;
+    background: var(--primary-light);   /* Light red bg */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--primary);               /* Red icon */
+    margin-bottom: 8px;
+    animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+
+.success-container h2 {
+    font-size: 1.5rem;
+}
+
+.success-container p {
+    color: var(--gray);
+    max-width: 280px;
+}
+
+.order-id-box {
+    background: var(--light);            /* Cream bg */
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 8px 0;
+}
+
+/* -------------------------------------------- */
+/* 20. TRACKING / TIMELINE                      */
+/* -------------------------------------------- */
+.track-card {
+    background: var(--white);
+    padding: 16px;
+    margin: 8px 16px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.track-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.track-info h4 {
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.track-info p {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.status-badge {
+    background: var(--primary-light);    /* Light red */
+    color: var(--primary-dark);           /* Dark red text */
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Timeline */
+.timeline {
+    padding: 16px;
+}
+
+.timeline-step {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    position: relative;
+}
+
+.timeline-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 48px;
+    width: 2px;
+    height: calc(100% - 24px);
+    background: var(--light-gray);
+}
+
+.timeline-step.completed:not(:last-child)::before {
+    background: var(--primary);          /* Red line for completed */
+}
+
+.timeline-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    z-index: 1;
+    transition: all 0.3s;
+}
+
+.timeline-step.completed .timeline-dot {
+    background: var(--primary);          /* Red completed */
+    color: var(--white);
+}
+
+.timeline-step.active .timeline-dot {
+    background: var(--primary);          /* Red active */
+    color: var(--white);
+    box-shadow: 0 0 0 4px var(--primary-light); /* Red glow */
+}
+
+.timeline-content h4 {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.timeline-content p {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+/* -------------------------------------------- */
+/* 21. BOTTOM NAVIGATION                        */
+/* -------------------------------------------- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: var(--white);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0 12px;
+    border-top: 1px solid var(--light-gray);
+    z-index: 100;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-size: 0.65rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s;
+    flex: 1;
+    padding: 4px;
+}
+
+.nav-item i {
+    font-size: 1.2rem;
+}
+
+.nav-item.active {
+    color: var(--primary);               /* RED active nav */
+}
+
+/* -------------------------------------------- */
+/* 22. TOAST NOTIFICATION                       */
+/* -------------------------------------------- */
+.toast {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: var(--primary);          /* RED toast */
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 200;
+    transition: transform 0.3s ease;
+    box-shadow: var(--shadow-lg);
+    pointer-events: none;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* -------------------------------------------- */
+/* 23. RESPONSIVE (Desktop)                     */
+/* -------------------------------------------- */
+@media (min-width: 768px) {
+    body {
+        background: linear-gradient(135deg, #F5C518, #F59E0B); /* Gold gradient */
+        padding: 20px;
+    }
+
+    .app-container {
+        border-radius: var(--radius-xl);
+        min-height: calc(100vh - 40px);
+    }
+}
