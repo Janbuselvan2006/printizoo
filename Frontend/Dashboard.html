@@ -1,0 +1,684 @@
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+<meta charset="utf-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+<title>PRINTIZOO — Groceries in Minutes</title>  
+<style>  
+:root{  
+  --yellow:#ffd33d;--yellow2:#ffed8a;--red:#ed1c24;  
+  --dark:#171717;--cream:#fff8ee;--pink:#ff2b88;  
+  --white:#ffffff;--gray:#f4f4f5;--green:#00a650;  
+}  
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}  
+html{scroll-behavior:smooth}  
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--cream);color:var(--dark);padding-bottom:90px}  /* Header */
+.app-header{
+position:sticky;top:0;z-index:100;
+background:linear-gradient(180deg,var(--yellow) 0%,var(--yellow2) 100%);
+padding:14px 16px 10px;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start}
+.brand{font-size:26px;font-weight:900;color:var(--red);letter-spacing:-1.5px;line-height:1}
+.location-btn{
+display:inline-flex;align-items:center;gap:4px;margin-top:6px;
+background:rgba(255,255,255,.75);padding:6px 14px;border-radius:20px;
+font-size:12px;font-weight:800;color:var(--dark);border:none;cursor:pointer;
+}
+.header-actions{display:flex;gap:10px;align-items:center}
+.icon-btn{
+position:relative;background:var(--dark);color:var(--yellow);
+border:none;width:44px;height:44px;border-radius:14px;
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12);
+}
+.badge{
+position:absolute;top:-5px;right:-5px;
+background:var(--red);color:#fff;font-size:11px;font-weight:900;
+width:22px;height:22px;border-radius:50%;
+display:none;align-items:center;justify-content:center;
+border:2px solid var(--yellow2);
+}
+.badge.show{display:flex}
+.search-wrap{position:relative;margin-top:12px}
+.search-bar{
+width:100%;padding:12px 16px 12px 40px;border-radius:14px;border:none;
+background:var(--white);font-size:15px;outline:none;
+box-shadow:0 2px 8px rgba(0,0,0,.06);color:var(--dark);
+}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#999}
+
+/* Screens */
+.screen{display:none;padding:0 0 24px}
+.screen.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Category Pills */
+.cat-row{
+display:flex;gap:10px;padding:14px 16px;overflow-x:auto;scrollbar-width:none;
+}
+.cat-row::-webkit-scrollbar{display:none}
+.cat-pill{
+flex-shrink:0;padding:10px 18px;background:var(--white);border-radius:24px;
+font-size:13px;font-weight:800;color:#555;cursor:pointer;white-space:nowrap;
+border:2px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.04);
+}
+.cat-pill.active{background:var(--dark);color:var(--yellow);border-color:var(--dark)}
+.cat-pill:active{transform:scale(.95)}
+
+/* Hero */
+.hero{
+margin:0 16px 18px;background:var(--dark);border-radius:24px;padding:28px 24px;
+color:#fff;position:relative;overflow:hidden;
+box-shadow:0 10px 30px rgba(237,28,36,.15);
+}
+.hero::before{
+content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;
+background:var(--red);opacity:.25;border-radius:50%;
+}
+.hero::after{
+content:"";position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;
+background:var(--yellow);opacity:.2;border-radius:50%;
+}
+.hero h1{font-size:30px;line-height:1.15;margin:0 0 8px;position:relative;z-index:1}
+.hero p{font-size:15px;opacity:.9;margin:0 0 16px;position:relative;z-index:1}
+.hero-tags{display:flex;gap:8px;position:relative;z-index:1;flex-wrap:wrap}
+.tag{
+display:inline-flex;align-items:center;gap:6px;
+background:var(--red);color:#fff;padding:7px 14px;border-radius:20px;
+font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;
+}
+.tag.alt{background:var(--yellow);color:var(--dark)}
+
+/* Section */
+.section-head{
+display:flex;justify-content:space-between;align-items:center;
+padding:22px 16px 10px;
+}
+.section-title{font-size:20px;font-weight:900;letter-spacing:-.5px}
+.see-all{font-size:13px;font-weight:800;color:var(--red);cursor:pointer}
+
+/* Product Grid */
+.product-grid{
+display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px;
+}
+.product-card{
+background:var(--white);border-radius:18px;padding:10px;
+box-shadow:0 4px 12px rgba(0,0,0,.05);
+display:flex;flex-direction:column;position:relative;transition:.15s;
+}
+.product-card:active{transform:scale(.98)}
+.prod-img-wrap{
+width:100%;aspect-ratio:1/1;background:var(--gray);border-radius:14px;
+overflow:hidden;margin-bottom:10px;position:relative;
+}
+.prod-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.prod-name{font-size:14px;font-weight:800;line-height:1.25;margin-bottom:3px}
+.prod-wt{font-size:12px;color:#888;margin-bottom:10px}
+.prod-bottom{
+margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:6px;
+}
+.price-wrap{display:flex;flex-direction:column}
+.prod-price{font-size:16px;font-weight:900}
+.prod-mrp{font-size:12px;color:#999;text-decoration:line-through}
+
+/* Add / Qty */
+.add-btn{
+background:var(--dark);color:var(--yellow);border:none;
+padding:8px 18px;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer;
+white-space:nowrap;
+}
+.qty-box{
+display:none;align-items:center;gap:6px;background:var(--yellow);border-radius:10px;padding:4px;
+}
+.qty-box.show{display:flex}
+.qty-btn{
+width:28px;height:28px;border:none;border-radius:8px;
+background:var(--dark);color:var(--yellow);font-size:16px;font-weight:900;
+display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.qty-num{font-weight:900;min-width:22px;text-align:center;font-size:14px}
+
+/* Cart Screen */
+.cart-list{padding:0 16px}
+.cart-item{
+display:flex;gap:14px;align-items:center;background:#fff;
+padding:12px;border-radius:16px;margin-bottom:10px;
+box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.cart-item img{width:64px;height:64px;border-radius:12px;object-fit:cover;background:var(--gray)}
+.cart-info{flex:1}
+.cart-name{font-size:15px;font-weight:800;margin-bottom:2px}
+.cart-wt{font-size:12px;color:#888;margin-bottom:6px}
+.cart-price{font-size:15px;font-weight:900}
+.cart-qty-wrap{display:flex;align-items:center;gap:8px}
+.cart-qty-btn{
+width:32px;height:32px;border-radius:10px;border:none;background:var(--dark);color:var(--yellow);
+font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.cart-qty-num{font-weight:900;width:24px;text-align:center}
+
+.empty-state{text-align:center;padding:60px 20px;color:#888}
+.empty-state svg{width:80px;height:80px;color:#ccc;margin-bottom:12px}
+
+.bill-box{
+background:#fff;margin:16px;border-radius:20px;padding:20px;
+box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
+.bill-row{display:flex;justify-content:space-between;margin-bottom:10px;font-size:15px}
+.bill-row.total{font-size:20px;font-weight:900;border-top:2px dashed #eee;padding-top:12px;margin-top:12px}
+.saved{color:var(--green);font-weight:800;font-size:13px;margin-bottom:12px}
+.checkout-btn{
+width:100%;padding:16px;background:var(--dark);color:var(--yellow);
+border:none;border-radius:16px;font-size:17px;font-weight:900;cursor:pointer;
+box-shadow:0 6px 0 rgba(0,0,0,.15);margin-top:8px;
+}
+.checkout-btn:active{transform:translateY(2px);box-shadow:0 3px 0 rgba(0,0,0,.15)}
+
+/* Account */
+.profile-card{
+background:var(--dark);color:#fff;margin:16px;border-radius:24px;padding:28px;
+text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+.profile-card h2{margin:0 0 6px;font-size:22px}
+.profile-card p{margin:0;opacity:.85;font-size:14px}
+.login-btn{
+background:var(--yellow);color:var(--dark);border:none;padding:14px 32px;
+border-radius:14px;font-size:15px;font-weight:900;cursor:pointer;margin-top:16px;
+box-shadow:0 4px 0 rgba(0,0,0,.12);
+}
+.menu-list{
+background:#fff;margin:16px;border-radius:20px;padding:8px 0;
+box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.menu-item{
+display:flex;justify-content:space-between;align-items:center;
+padding:16px 20px;font-size:15px;font-weight:700;border-bottom:1px solid #f4f4f5;cursor:pointer;
+}
+.menu-item:last-child{border:none}
+
+/* Bottom Nav */
+.bottom-nav{
+position:fixed;bottom:0;left:0;right:0;background:#fff;
+display:flex;justify-content:space-around;padding:10px 0 14px;
+border-top:1px solid #eee;z-index:90;
+}
+.nav-item{
+display:flex;flex-direction:column;align-items:center;gap:3px;
+font-size:11px;font-weight:800;color:#bbb;cursor:pointer;background:none;border:none;width:60px;
+}
+.nav-item.active{color:var(--dark)}
+.nav-icon{width:24px;height:24px}
+
+/* Modals */
+.modal-overlay{
+position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
+display:none;align-items:flex-end;justify-content:center;
+}
+.modal-overlay.active{display:flex}
+.modal-sheet{
+background:#fff;width:100%;max-width:520px;border-radius:24px 24px 0 0;
+padding:24px 20px 28px;animation:slideUp .25s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:20px;font-weight:900;margin:0 0 16px}
+.modal-input{
+width:100%;padding:14px 16px;border-radius:14px;border:2px solid #eee;
+font-size:16px;margin-bottom:12px;outline:none;
+}
+.modal-input:focus{border-color:var(--yellow)}
+.modal-btn{
+width:100%;padding:14px;background:var(--dark);color:var(--yellow);
+border:none;border-radius:14px;font-size:15px;font-weight:900;cursor:pointer;margin-top:6px;
+}
+.modal-btn.secondary{background:#f4f4f5;color:var(--dark)}
+.close-modal{
+position:absolute;top:16px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;
+}
+.modal-relative{position:relative}
+.toast{
+position:fixed;top:16px;left:50%;transform:translateX(-50%);
+background:var(--dark);color:var(--yellow);padding:12px 20px;border-radius:14px;
+font-size:14px;font-weight:800;z-index:250;display:none;box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+.toast.show{display:block}
+
+/* Desktop tweak */
+@media(min-width:768px){
+.product-grid{grid-template-columns:repeat(4,1fr);max-width:900px;margin:0 auto}
+.app-header{padding:14px 24px 10px}
+.cat-row,.section-head,.hero{margin-left:auto;margin-right:auto;max-width:900px}
+.hero{margin-bottom:18px}
+}
+</style>
+
+</head>  
+<body>  <!-- Toast -->  <div id="toast" class="toast"></div>  <!-- Location Modal -->  <div id="locModal" class="modal-overlay" onclick="if(event.target===this)closeLocModal()">  
+  <div class="modal-sheet">  
+    <div class="modal-relative">  
+      <button class="close-modal" onclick="closeLocModal()">✕</button>  
+      <h3 class="modal-title">Set Delivery Location</h3>  
+      <button class="modal-btn" onclick="detectLocation()">📍 Use Current Location</button>  
+      <p style="text-align:center;margin:10px 0;color:#888;font-size:13px;font-weight:700">— or —</p>  
+      <input type="text" id="manualLoc" class="modal-input" placeholder="Type your area / landmark">  
+      <button class="modal-btn secondary" onclick="saveManualLocation()">Save Address</button>  
+      <p id="locStatus" style="margin-top:10px;font-size:13px;color:var(--green);font-weight:800"></p>  
+    </div>  
+  </div>  
+</div>  <!-- Login Modal -->  <div id="loginModal" class="modal-overlay" onclick="if(event.target===this)closeLoginModal()">  
+  <div class="modal-sheet">  
+    <div class="modal-relative">  
+      <button class="close-modal" onclick="closeLoginModal()">✕</button>  
+      <h3 class="modal-title" id="loginTitle">Login with Phone</h3>  
+      <div id="phoneStep">  
+        <input type="tel" id="phoneInp" class="modal-input" placeholder="10-digit mobile number" maxlength="10">  
+        <button class="modal-btn" onclick="sendOtp()">Send OTP</button>  
+      </div>  
+      <div id="otpStep" style="display:none">  
+        <p style="font-size:13px;color:#666;margin-bottom:10px">Demo OTP is <b>123456</b></p>  
+        <input type="number" id="otpInp" class="modal-input" placeholder="Enter 6-digit OTP">  
+        <button class="modal-btn" onclick="verifyOtp()">Verify & Login</button>  
+        <button class="modal-btn secondary" onclick="sendOtp()" style="margin-top:8px">Resend OTP</button>  
+      </div>  
+    </div>  
+  </div>  
+</div>  <!-- Header -->  <header class="app-header">  
+  <div class="header-top">  
+    <div>  
+      <div class="brand">PRINTIZOO</div>  
+      <button class="location-btn" onclick="openLocModal()" aria-label="Change location">  
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>  
+        <span id="locText">Delivering to Home — 10 min</span>  
+      </button>  
+    </div>  
+    <div class="header-actions">  
+      <button class="icon-btn" onclick="switchScreen('cart')" aria-label="Open cart">  
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>  
+        <span class="badge" id="cartBadge">0</span>  
+      </button>  
+    </div>  
+  </div>  
+  <div class="search-wrap">  
+    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>  
+    <input type="text" class="search-bar" placeholder="Search milk, bread, veggies..." id="searchInp" oninput="handleSearch()">  
+  </div>  
+</header>  <!-- SCREENS -->  <main>  <!-- HOME -->  <section id="screen-home" class="screen active">  
+  <div class="cat-row" id="homeCats">  
+    <div class="cat-pill active" onclick="filterCategory('all',this)">All</div>  
+    <div class="cat-pill" onclick="filterCategory('dairy',this)">Dairy</div>  
+    <div class="cat-pill" onclick="filterCategory('veggies',this)">Vegetables</div>  
+    <div class="cat-pill" onclick="filterCategory('fruits',this)">Fruits</div>  
+    <div class="cat-pill" onclick="filterCategory('grocery',this)">Grocery</div>  
+    <div class="cat-pill" onclick="filterCategory('snacks',this)">Snacks</div>  
+    <div class="cat-pill" onclick="filterCategory('drinks',this)">Drinks</div>  
+    <div class="cat-pill" onclick="filterCategory('household',this)">Household</div>  
+  </div>    <div class="hero">  
+    <h1>Delivered in Minutes</h1>  
+    <p>Fresh groceries & daily essentials at lightning speed.</p>  
+    <div class="hero-tags">  
+      <span class="tag">⚡ Under 10 mins</span>  
+      <span class="tag alt">Free Delivery</span>  
+    </div>  
+  </div>    <div class="section-head"><div class="section-title">Trending Now</div><div class="see-all">See all ›</div></div>  
+  <div class="product-grid" id="homeGrid"></div>  
+</section>  <!-- CATEGORY -->  <section id="screen-category" class="screen">  
+  <div class="section-head" style="padding-top:16px">  
+    <div class="section-title" id="catTitle">Category</div>  
+    <div class="see-all" onclick="switchScreen('home')">← Back</div>  
+  </div>  
+  <div class="product-grid" id="catGrid"></div>  
+</section>  <!-- CART -->  <section id="screen-cart" class="screen">  
+  <div class="section-head" style="padding-top:16px"><div class="section-title">Your Cart</div></div>  
+  <div id="cartContainer">  
+    <div class="empty-state">  
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>  
+      <div>Your cart is empty</div>  
+      <button class="login-btn" style="margin-top:16px" onclick="switchScreen('home')">Start Shopping</button>  
+    </div>  
+  </div>  
+</section>  <!-- ACCOUNT -->  <section id="screen-account" class="screen">  
+  <div class="section-head" style="padding-top:16px"><div class="section-title">My Account</div></div>  
+  <div id="accountBox">  
+    <div class="profile-card">  
+      <div style="font-size:40px;margin-bottom:10px">👤</div>  
+      <h2>Guest User</h2>  
+      <p>Login to view orders & saved addresses</p>  
+      <button class="login-btn" onclick="openLoginModal()">Login / Register</button>  
+    </div>  
+  </div>  
+  <div class="menu-list">  
+    <div class="menu-item"><span>🛒 Your Orders</span><span>›</span></div>  
+    <div class="menu-item"><span>📍 Saved Addresses</span><span>›</span></div>  
+    <div class="menu-item"><span>💬 Help & Support</span><span>›</span></div>  
+    <div class="menu-item"><span>ℹ️ About memo demo</span><span>›</span></div>  
+  </div>  
+</section>  </main>  <!-- Bottom Nav -->  <nav class="bottom-nav">  
+  <button class="nav-item active" onclick="switchScreen('home')" data-tab="home">  
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>  
+    <span>Home</span>  
+  </button>  
+  <button class="nav-item" onclick="switchScreen('category');filterCategory('all',null)" data-tab="category">  
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>  
+    <span>Categories</span>  
+  </button>  
+  <button class="nav-item" onclick="switchScreen('cart')" data-tab="cart">  
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>  
+    <span>Cart</span>  
+  </button>  
+  <button class="nav-item" onclick="switchScreen('account')" data-tab="account">  
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>  
+    <span>Account</span>  
+  </button>  
+</nav>  <script>  
+/* Data */  
+const products=[  
+  {id:1,name:'Fresh Milk',wt:'500 ml',price:28,mrp:32,cat:'dairy',img:'milk'},  
+  {id:2,name:'Whole Wheat Bread',wt:'400 g',price:35,mrp:40,cat:'dairy',img:'bread'},  
+  {id:3,name:'Bananas',wt:'1 kg',price:48,mrp:55,cat:'fruits',img:'banana'},  
+  {id:4,name:'Tomatoes',wt:'500 g',price:24,mrp:30,cat:'veggies',img:'tomato'},  
+  {id:5,name:'Potato Chips',wt:'100 g',price:20,mrp:25,cat:'snacks',img:'potato-chips'},  
+  {id:6,name:'Cola Can',wt:'300 ml',price:40,mrp:45,cat:'drinks',img:'cola'},  
+  {id:7,name:'Basmati Rice',wt:'1 kg',price:55,mrp:65,cat:'grocery',img:'rice'},  
+  {id:8,name:'Refined Sugar',wt:'1 kg',price:45,mrp:50,cat:'grocery',img:'sugar'},  
+  {id:9,name:'Onions',wt:'1 kg',price:32,mrp:38,cat:'veggies',img:'onion'},  
+  {id:10,name:'Butter',wt:'100 g',price:52,mrp:60,cat:'dairy',img:'butter'},  
+  {id:11,name:'Dark Chocolate',wt:'50 g',price:30,mrp:35,cat:'snacks',img:'chocolate'},  
+  {id:12,name:'Mineral Water',wt:'1 L',price:20,mrp:25,cat:'drinks',img:'water-bottle'},  
+  {id:13,name:'Apples',wt:'1 kg',price:120,mrp:140,cat:'fruits',img:'apple'},  
+  {id:14,name:'Carrots',wt:'500 g',price:22,mrp:28,cat:'veggies',img:'carrot'},  
+  {id:15,name:'Eggs',wt:'6 pcs',price:42,mrp:48,cat:'dairy',img:'eggs'},  
+  {id:16,name:'Cooking Oil',wt:'1 L',price:110,mrp:125,cat:'grocery',img:'cooking-oil'},  
+  {id:17,name:'Spinach',wt:'250 g',price:15,mrp:20,cat:'veggies',img:'spinach'},  
+  {id:18,name:'Orange Juice',wt:'1 L',price:85,mrp:95,cat:'drinks',img:'orange-juice'},  
+  {id:19,name:'Biscuits',wt:'200 g',price:25,mrp:30,cat:'snacks',img:'biscuits'},  
+  {id:20,name:'Dishwash Gel',wt:'500 ml',price:65,mrp:75,cat:'household',img:'dishwash'},  
+  {id:21,name:'Yogurt',wt:'200 g',price:28,mrp:32,cat:'dairy',img:'yogurt'},  
+  {id:22,name:'Potatoes',wt:'1 kg',price:30,mrp:36,cat:'veggies',img:'potato'},  
+  {id:23,name:'Oranges',wt:'1 kg',price:80,mrp:95,cat:'fruits',img:'orange'},  
+  {id:24,name:'Namkeen',wt:'150 g',price:35,mrp:40,cat:'snacks',img:'namkeen'},  
+  {id:25,name:'Cold Coffee',wt:'200 ml',price:55,mrp:65,cat:'drinks',img:'cold-coffee'},  
+  {id:26,name:'Toothpaste',wt:'150 g',price:45,mrp:50,cat:'household',img:'toothpaste'},  
+  {id:27,name:'Detergent',wt:'1 kg',price:90,mrp:105,cat:'household',img:'detergent'},  
+  {id:28,name:'Grapes',wt:'500 g',price:60,mrp:70,cat:'fruits',img:'grapes'},  
+];  
+  
+const app={cart:{},user:null,location:{address:'Home — 10 min'}};  
+  
+/* Helpers */  
+const $=id=>document.getElementById(id);  
+const show=(id,on=true)=>$(id).style.display=on?'block':'none';  
+const toast=msg=>{const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);};  
+  
+function imgUrl(keyword,name){  
+  return `https://source.unsplash.com/300x300/?${encodeURIComponent(keyword)}`;  
+}  
+  
+function productCard(p){  
+  const q=app.cart[p.id]?.qty||0;  
+  return `  
+  <div class="product-card" data-cat="${p.cat}" data-name="${p.name.toLowerCase()}">  
+    <div class="prod-img-wrap">  
+      <img src="${imgUrl(p.img,p.name)}" alt="${p.name}" loading="lazy"  
+        onerror="this.onerror=null;this.src='https://placehold.co/300x300/fff8ee/ed1c24?text=${encodeURIComponent(p.name)}';">  
+    </div>  
+    <div class="prod-name">${p.name}</div>  
+    <div class="prod-wt">${p.wt}</div>  
+    <div class="prod-bottom">  
+      <div class="price-wrap">  
+        <div class="prod-price">₹${p.price}</div>  
+        <div class="prod-mrp">₹${p.mrp}</div>  
+      </div>  
+      <div class="qty-box ${q?'show':''}" id="qb-${p.id}">  
+        <button class="qty-btn" onclick="changeQty(${p.id},-1)" aria-label="Decrease quantity">−</button>  
+        <span class="qty-num" id="qn-${p.id}">${q}</span>  
+        <button class="qty-btn" onclick="changeQty(${p.id},1)" aria-label="Increase quantity">+</button>  
+      </div>  
+      <button class="add-btn" id="ab-${p.id}" onclick="changeQty(${p.id},1)" style="display:${q?'none':'inline-block'}" aria-label="Add ${p.name} to cart">ADD</button>  
+    </div>  
+  </div>`;  
+}  
+  
+function renderHome(){  
+  $('homeGrid').innerHTML=products.map(productCard).join('');  
+}  
+  
+function renderCategory(cat){  
+  const filtered=cat==='all'?products:products.filter(p=>p.cat===cat);  
+  $('catTitle').textContent=cat==='all'?'All Products':cat.charAt(0).toUpperCase()+cat.slice(1);  
+  $('catGrid').innerHTML=filtered.map(productCard).join('');  
+}  
+  
+function switchScreen(name){  
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));  
+  $(`screen-${name}`).classList.add('active');  
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));  
+  const tabBtn=document.querySelector(`.nav-item[data-tab="${name}"]`);  
+  if(tabBtn)tabBtn.classList.add('active');  
+  window.scrollTo({top:0,behavior:'smooth'});  
+  if(name==='cart')renderCart();  
+  if(name==='account')renderAccount();  
+}  
+  
+/* Cart Logic */  
+function changeQty(id,delta){  
+  if(!app.cart[id]) app.cart[id]={...products.find(p=>p.id===id),qty:0};  
+  app.cart[id].qty+=delta;  
+  if(app.cart[id].qty<=0) delete app.cart[id];  
+  updateProductUI(id);  
+  updateCartBadge();  
+}  
+  
+function updateProductUI(id){  
+  const q=app.cart[id]?.qty||0;  
+  const qb=document.getElementById(`qb-${id}`);  
+  const ab=document.getElementById(`ab-${id}`);  
+  const qn=document.getElementById(`qn-${id}`);  
+  if(qb&&ab&&qn){  
+    if(q){qb.classList.add('show');ab.style.display='none';qn.textContent=q;}  
+    else{qb.classList.remove('show');ab.style.display='inline-block';}  
+  }  
+}  
+  
+function updateCartBadge(){  
+  const count=Object.values(app.cart).reduce((a,b)=>a+b.qty,0);  
+  $('cartBadge').textContent=count;  
+  $('cartBadge').classList.toggle('show',count>0);  
+  const cartNav=document.querySelector('.nav-item[data-tab="cart"] span:last-child');  
+  cartNav.textContent=count?`Cart (${count})`:'Cart';  
+}  
+  
+function getCartTotals(){  
+  let itemTotal=0,totalMrp=0,count=0;  
+  Object.values(app.cart).forEach(i=>{  
+    itemTotal+=i.price*i.qty;totalMrp+=i.mrp*i.qty;count+=i.qty;  
+  });  
+  const delivery=itemTotal>=199?0:25;  
+  const handling=5;  
+  return{itemTotal,totalMrp,delivery,handling,grandTotal:itemTotal+delivery+handling,savings:totalMrp-itemTotal,count};  
+}  
+  
+function renderCart(){  
+  const items=Object.values(app.cart);  
+  if(!items.length){  
+    $('cartContainer').innerHTML=`  
+      <div class="empty-state">  
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>  
+        <div>Your cart is empty</div>  
+        <button class="login-btn" style="margin-top:16px" onclick="switchScreen('home')">Start Shopping</button>  
+      </div>`;  
+    return;  
+  }  
+  const t=getCartTotals();  
+  let html=`<div class="cart-list">`;  
+  items.forEach(i=>{  
+    html+=`  
+    <div class="cart-item">  
+      <img src="${imgUrl(i.img,i.name)}" alt="${i.name}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/fff8ee/ed1c24?text=${encodeURIComponent(i.name)}';">  
+      <div class="cart-info">  
+        <div class="cart-name">${i.name}</div>  
+        <div class="cart-wt">${i.wt}</div>  
+        <div class="cart-price">₹${i.price}</div>  
+      </div>  
+      <div class="cart-qty-wrap">  
+        <button class="cart-qty-btn" onclick="changeQty(${i.id},-1)" aria-label="Remove one">−</button>  
+        <div class="cart-qty-num">${i.qty}</div>  
+        <button class="cart-qty-btn" onclick="changeQty(${i.id},1)" aria-label="Add one">+</button>  
+      </div>  
+    </div>`;  
+  });  
+  html+=`</div>`;  
+  html+=`  
+  <div class="bill-box">  
+    <div class="saved">You saved ₹${t.savings} on this order</div>  
+    <div class="bill-row"><span>Item Total</span><span>₹${t.itemTotal}</span></div>  
+    <div class="bill-row"><span>Delivery Fee</span><span style="color:${t.delivery?'inherit':'var(--green)'}">${t.delivery?'₹'+t.delivery:'FREE'}</span></div>  
+    <div class="bill-row"><span>Handling Fee</span><span>₹${t.handling}</span></div>  
+    <div class="bill-row total"><span>Grand Total</span><span>₹${t.grandTotal}</span></div>  
+    <button class="checkout-btn" onclick="checkout()">Checkout →</button>  
+  </div>`;  
+  $('cartContainer').innerHTML=html;  
+}  
+  
+function checkout(){  
+  if(!app.user){openLoginModal();return;}  
+  toast('Order placed successfully! 🎉');  
+  app.cart={};  
+  updateCartBadge();  
+  renderCart();  
+  switchScreen('home');  
+}  
+  
+/* Category & Search */  
+function filterCategory(cat,el){  
+  if(el){  
+    document.querySelectorAll('#homeCats .cat-pill').forEach(p=>p.classList.remove('active'));  
+    el.classList.add('active');  
+  }  
+  if(cat!=='all'){  
+    renderCategory(cat);  
+    switchScreen('category');  
+  }else{  
+    renderHome();  
+    switchScreen('home');  
+  }  
+}  
+  
+function handleSearch(){  
+  const q=$('searchInp').value.toLowerCase().trim();  
+  if(!q){renderHome();return;}  
+  const filtered=products.filter(p=>p.name.toLowerCase().includes(q));  
+  $('homeGrid').innerHTML=filtered.map(productCard).join('');  
+  switchScreen('home');  
+}  
+  
+/* Location */  
+function openLocModal(){$('locModal').classList.add('active');}  
+function closeLocModal(){$('locModal').classList.remove('active');}  
+function saveManualLocation(){  
+  const v=$('manualLoc').value.trim();  
+  if(!v){toast('Please enter an address');return;}  
+  app.location.address=v;  
+  $('locText').textContent=v;  
+  closeLocModal();toast('Location updated');  
+}  
+function detectLocation(){  
+  if(!navigator.geolocation){toast('Geolocation not supported');return;}  
+  $('locStatus').textContent='Detecting...';  
+  navigator.geolocation.getCurrentPosition(pos=>{  
+    const lat=pos.coords.latitude.toFixed(4);  
+    const lon=pos.coords.longitude.toFixed(4);  
+    app.location.address = `Lat ${lat}, Lon ${lon}`;
+$("locText").textContent = app.location.address;
+$("locStatus").textContent = "Location detected successfully.";
+
+setTimeout(() => {
+    closeLocModal();
+    toast("Location updated");
+}, 800);
+    }, () => {
+      $("locStatus").textContent = "";
+      toast("Unable to detect location");
+    });
+}
+
+/* Login */
+function openLoginModal() {
+  $("loginModal").classList.add("active");
+}
+
+function closeLoginModal() {
+  $("loginModal").classList.remove("active");
+  $("phoneStep").style.display = "block";
+  $("otpStep").style.display = "none";
+  $("phoneInp").value = "";
+  $("otpInp").value = "";
+}
+
+function sendOtp() {
+  const phone = $("phoneInp").value.trim();
+
+  if (!/^[6-9]\d{9}$/.test(phone)) {
+    toast("Please enter a valid 10-digit mobile number");
+    return;
+  }
+
+  $("phoneStep").style.display = "none";
+  $("otpStep").style.display = "block";
+  toast("Demo OTP is 123456");
+}
+
+function verifyOtp() {
+  const otp = $("otpInp").value.trim();
+
+  if (otp !== "123456") {
+    toast("Incorrect OTP");
+    return;
+  }
+
+  app.user = {
+    name: "Demo User",
+    phone: $("phoneInp").value.trim()
+  };
+
+  closeLoginModal();
+  renderAccount();
+  toast("Login Successful");
+}
+
+function renderAccount() {
+  const box = $("accountBox");
+
+  if (!app.user) {
+    box.innerHTML = `
+      <div class="profile-card">
+        <div style="font-size:40px;margin-bottom:10px">👤</div>
+        <h2>Guest User</h2>
+        <p>Login to view orders & saved addresses</p>
+        <button class="login-btn" onclick="openLoginModal()">Login / Register</button>
+      </div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="profile-card">
+      <div style="font-size:40px;margin-bottom:10px">👤</div>
+      <h2>${app.user.name}</h2>
+      <p>${app.user.phone}</p>
+      <button class="login-btn" onclick="logout()">Logout</button>
+    </div>`;
+}
+
+function logout() {
+  app.user = null;
+  renderAccount();
+  toast("Logged out");
+}
+
+/* Initialize */
+renderHome();
+renderCategory("all");
+updateCartBadge();
+renderAccount();
+</script>
+</body>
+</html>
