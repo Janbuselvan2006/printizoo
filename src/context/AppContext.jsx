@@ -221,6 +221,7 @@ export function AppProvider({ children }) {
 
   // Firebase Auth Listener & Firestore Role Sync
   useEffect(() => {
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
       if (fbUser) {
         try {
